@@ -7,9 +7,11 @@
         <groupId>org.tasky</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
+    <name>gateway</name>
     <artifactId>gateway</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -32,5 +34,17 @@
             <artifactId>spring-cloud-config-client</artifactId>
         </dependency>
     </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <finalName>${project.name}</finalName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

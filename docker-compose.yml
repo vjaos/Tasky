@@ -1,0 +1,21 @@
+version: '3'
+services:
+  config:
+    image: vjaos/tasky-config
+    restart: always
+
+  discovery:
+    image: vjaos/tasky-discovery
+    restart: always
+    depends_on:
+      - config
+    ports:
+      - 8761:8761
+
+  gateway:
+    image: vjaos/tasky-gateway
+    restart: always
+    depends_on:
+      - config
+    ports:
+      - 5555:5555
