@@ -1,16 +1,16 @@
-version: '3'
+version: '3.4'
 services:
   config:
     image: vjaos/tasky-config
     restart: always
+    ports:
+      - "8888:8888"
 
   discovery:
     image: vjaos/tasky-discovery
     restart: always
-    depends_on:
-      - config
     ports:
-      - 8761:8761
+      - "8087:8087"
 
   gateway:
     image: vjaos/tasky-gateway
@@ -18,4 +18,41 @@ services:
     depends_on:
       - config
     ports:
-      - 5555:5555
+      - "8080:8080"
+
+  postgres:
+    restart: always
+    image: postgres
+    volumes:
+      - postgres:/data/pgdata
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL
+      PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - "$PGADMIN_PORT:80"
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - postgres_network
+
+volumes:
+  pgadmin:
+  postgres:
+
+networks:
+  postgres_network:
+    driver: bridge

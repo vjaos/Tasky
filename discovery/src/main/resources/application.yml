@@ -1,9 +1,16 @@
+spring:
+  application:
+    name: discovery
+
 server:
-  port: 8761
+  port: 8087
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     register-with-eureka: false
     fetch-registry: false
   server:
-    wait-time-in-ms-when-sync-empty: 5
+    wait-time-in-ms-when-sync-empty: 0
+    peer-node-read-timeout-ms: 500
