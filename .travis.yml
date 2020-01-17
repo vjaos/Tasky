@@ -39,3 +39,9 @@ after_success:
   - docker build -t $GATEWAY:$COMMIT ./gateway
   - docker tag $GATEWAY:$COMMIT $GATEWAY:$TAG
   - docker push $GATEWAY
+
+  #PROJECT SERVICE
+  - export PROJECT_SERVICE=vjaos/project-service
+  - docker build -t $PROJECT_SERVICE:$COMMIT ./project-service
+  - docker tag $PROJECT_SERVICE:$COMMIT $PROJECT_SERVICE:$TAG
+  - docker push $PROJECT_SERVICE

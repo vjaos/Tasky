@@ -34,6 +34,15 @@ services:
     networks:
       - postgres_network
 
+  project-service:
+    restart: always
+    image: vjaos/project-service
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    ports:
+      - "8088:8088"
+
   pgadmin:
     image: dpage/pgadmin4
     environment:
