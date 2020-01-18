@@ -10,9 +10,12 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>frontend</module>
         <module>config</module>
         <module>discovery</module>
         <module>gateway</module>
+        <module>project-service</module>
+        <module>auth-service</module>
     </modules>
 
 
