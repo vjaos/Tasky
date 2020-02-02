@@ -1,24 +1,15 @@
 version: '3.4'
 services:
-  config:
-    image: vjaos/tasky-config
-    restart: always
-    ports:
-      - "8888:8888"
 
-  discovery:
-    image: vjaos/tasky-discovery
-    restart: always
-    ports:
-      - "8087:8087"
-
-  gateway:
-    image: vjaos/tasky-gateway
+  backend:
+    image: vjaos/tasky-backend
     restart: always
     depends_on:
-      - config
-    ports:
-      - "8080:8080"
+      - postgres
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+
 
   postgres:
     restart: always
@@ -31,20 +22,6 @@ services:
     ports:
       - "5432:5432"
 
-
-  project-service:
-    restart: unless-stopped
-    image: vjaos/project-service
-    depends_on:
-      - config
-      - postgres
-      - discovery
-    environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_HOST: $POSTGRES_HOST
-    ports:
-      - "8088:8088"
 
 
   pgadmin:

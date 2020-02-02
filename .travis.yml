@@ -5,11 +5,14 @@ jdk: oraclejdk8
 
 cache:
   - "$HOME/.m2"
+
 branches:
   only:
     - master
+
 services:
   - docker
+
 addons:
   apt:
     packages:
@@ -19,33 +22,15 @@ env:
     - COMMIT=${TRAVIS_COMMIT::7}
     - secure: OG0az0dZKzzyO7SBavTGVqUKqCJzAd7ESKgRdHk8dJnSLIEYynfyV0KYfeE8Bd7detKiJEcQarw5Qqkp4VD8rL25I33k5E7rUnxmZPQHH/UcHMBUyXKU2UHQg4lJ6x7qwhVBzEz/9dl/3ktu6HRZ6IxfK31gE59rWb0wBSCeIOrubL+wddul7NBS6D37l2nDEw2TKK/gj6ItU2vjJFMqPdIPTbSLta9MJ82I0trwOGqpXebIntWQ3mIi19k9GsVttUv7h+hNsBY/+5gZ/gLpTJ7TSH81p7CsSsSYCt4k7vGE/FQcJhkXEhAzBkShazsYItUw//RHBtzg9nVYLPYybpIkX4noRGXbbEOx0PttCHjQvxYnLZcOVrQ9AbBOj06Y7dVCcdqNj+TFvExrNLV06eZpaMBwVKYFYkE7KHN6ooJzyPX0sAN0Bkc+ahpS048rsKiWewTvY2npo2JLB5MkHHS7nDWnNR/jbydbi8lyVtXgLSw83IlJ5g9nqH08qNi8GtRkt1TY25enm3vQd/StIQFrUdDW0Bhuiph4JIZFM/9RBQxd9wTOrCnnaqrGv7RacwOFEW7RY4PsdtAXu6BGpnuJ/I+IsgYyUkwlS787NCRwL9SbsV0pugB/HoLlLSib+UHeJ9G7UetTezgZptfZnQlJg5aqP0R73PAe9kaPPSw=
     - secure: oaMpvFvaU7kzCXPRSuZGLY1sN76W92wKJUaoBf2rCtX5oQyCj79cj16Ofr5rBkd0fzZ8Tw6r1qbt+h/t1jU9jXVqS0DvnW2zqmGO8IHZIU1Ap/c2Ao+dCDf6BT0/bn2WgN2TyaOFNyw2nzGLUaD3h1fSqn71+NVACDbTZ6EDYXa8XHtgXbwCe6/8Lkpz1PXMFpIQeZ92XEVfK1rRWJ7JazPGND+ZeWAptFwJZYUEg7xcF+385o9Y2kIRYehUB/nGirVjeAIuBL92Bf2L67VwP0fE3ldRgtLbQSVtdmSQ/prUXH/X2d1ezlmlzIiRIx7xVWdrcS7BpjiXk+V/aMbI6hpYi4RNIf31PN469sxXwmaFB7a57Gapy95n2FZnLeM9OuvWcxXdsMlB7AT6QM4zmtSXt3Z6z5U51SQCG+CnjhgjABQEinXdmnOyflWfKDt42RE4V8osP+OaKacI34ELrLr0wW2vIWBuDIHPoEbSMs0H7924p/72emgGErWiOYDSwPT7jgJERfYr5dieESlv1OldyVIK8o9hQGr9QFJ57S5hnvE3RT0DMK9ELv41xHQDOASdo6ZDgiFTU/FH0V1x0ha2dcgrzt5g6zZjqwJzJn6Cb3wcriiT7XpZ2fz1VLAptlLGjhUyEEjZRFhJFSbVR9wtReurb8TI7gdKcbORJK0=
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH
     ; fi`
-  #CONFIG SERVER
-  - export CONFIG=vjaos/tasky-config
-  - docker build -t $CONFIG:$COMMIT ./config
-  - docker tag $CONFIG:$COMMIT $CONFIG:$TAG
-  - docker push $CONFIG
-  #DISCOVERY SERVER
-  - export DISCOVERY=vjaos/tasky-discovery
-  - docker build -t $DISCOVERY:$COMMIT ./discovery
-  - docker tag $DISCOVERY:$COMMIT $DISCOVERY:$TAG
-  - docker push $DISCOVERY
-  #GATEWAY SERVER
-  - export GATEWAY=vjaos/tasky-gateway
-  - docker build -t $GATEWAY:$COMMIT ./gateway
-  - docker tag $GATEWAY:$COMMIT $GATEWAY:$TAG
-  - docker push $GATEWAY
-  #PROJECT SERVICE
-  - export PROJECT_SERVICE=vjaos/project-service
-  - docker build -t $PROJECT_SERVICE:$COMMIT ./project-service
-  - docker tag $PROJECT_SERVICE:$COMMIT $PROJECT_SERVICE:$TAG
-  - docker push $PROJECT_SERVICE
-  #AUTH SERVICE
-  - export AUTH_SERVICE=vjaos/auth-service
-  - docker build -t $AUTH_SERVICE:$COMMIT ./auth-service
-  - docker tag $AUTH_SERVICE:$COMMIT $AUTH_SERVICE:$TAG
-  - docker push $AUTH_SERVICE
+
+  # PUSH BACKEND TO DOCKER HUB
+  - export BACKEND=vjaos/tasky-backend
+  - docker build -t $BACKEND:$COMMIT ./backend
+  - docker tag $BACKEND:$COMMIT $BACKEND:$TAG
+  - docker push $BACKEND
