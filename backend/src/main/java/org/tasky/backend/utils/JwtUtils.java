@@ -1,33 +1,37 @@
 package org.tasky.backend.utils;
 
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.tasky.backend.entity.User;
-import io.jsonwebtoken.*;
 
-import javax.xml.crypto.Data;
+import java.util.Calendar;
 import java.util.Date;
 
 @Component
 public class JwtUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+    private static final int JWT_EXPIRATION_DAYS = 14;
 
     @Value("${TASKY_JWT_SECRET:taskySecret}")
     private String jwtSecret;
-    @Value("${TASKY_JWT_EXPIRAION:123512}")
-    private int jwtExpiration;
+
 
     public String generateJwtToken(Authentication authentication) {
         User userPrincipal = (User) authentication.getPrincipal();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, JWT_EXPIRATION_DAYS); //Increase token expiration time for 2 week
+
         return Jwts.builder().
                 setSubject(userPrincipal.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + jwtExpiration))
+                .setExpiration(calendar.getTime())
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }

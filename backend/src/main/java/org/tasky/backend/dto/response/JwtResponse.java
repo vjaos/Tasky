@@ -1,4 +1,4 @@
-package org.tasky.backend.payload.response;
+package org.tasky.backend.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

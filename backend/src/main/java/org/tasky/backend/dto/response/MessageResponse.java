@@ -1,8 +1,7 @@
-package org.tasky.backend.payload.response;
+package org.tasky.backend.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter

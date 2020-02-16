@@ -1,0 +1,15 @@
+<template>
+    <v-container fluid>
+        Board
+    </v-container>
+</template>
+
+<script>
+    export default {
+        name: "BoardView"
+    }
+</script>
+
+<style scoped>
+
+</style>
