@@ -28,6 +28,7 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<?> createProject(@AuthenticationPrincipal User user,
                                            @Valid @RequestBody ProjectCreationRequest project) {
+
         if (projectService.isProjectExist(project.getProjectName())) {
             return ResponseEntity.badRequest().body(
                     new MessageResponse("Project " + project.getProjectName() + " already exist"));
@@ -56,6 +57,4 @@ public class ProjectController {
     public void updateProject(ProjectCreationRequest request) {
 
     }
-
-
 }

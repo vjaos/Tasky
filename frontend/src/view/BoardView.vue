@@ -1,6 +1,6 @@
 <template>
     <v-container fluid>
-        Board
+
     </v-container>
 </template>
 
@@ -11,5 +11,10 @@
 </script>
 
 <style scoped>
+    .container {
+        background-color: #f2f2f2;
+        border-radius: 25px;
+    }
+
 
 </style>

@@ -1,7 +1,7 @@
 <template>
     <v-app light>
         <navigation v-if="!hide"/>
-        <nav-bar></nav-bar>
+        <nav-bar v-if="!hide"></nav-bar>
         <v-content app>
             <v-container fluid>
                 <router-view></router-view>

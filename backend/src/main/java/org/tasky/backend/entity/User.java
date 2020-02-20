@@ -30,6 +30,12 @@ public class User implements UserDetails {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
     @NotBlank
     @Size(max = 120)
     @Column(name = "password")

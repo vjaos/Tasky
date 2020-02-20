@@ -19,4 +19,9 @@ public class Issue {
     @JoinColumn(name = "project_id")
     private Project project;
 
+    @OneToOne
+    private IssuePriority priority;
+
+    @OneToOne
+    private IssueType type;
 }

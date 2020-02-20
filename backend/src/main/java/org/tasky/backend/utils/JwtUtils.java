@@ -11,6 +11,15 @@ import org.tasky.backend.entity.User;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Utility class which main function is:
+ * <ul>
+ *     <li>generate a JWT</li>
+ *     <li>extract username from JWT</li>
+ *     <li>validate JWT</li>
+ * </ul>
+ * @see Jwts
+ */
 @Component
 public class JwtUtils {
 
@@ -26,7 +35,7 @@ public class JwtUtils {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_YEAR, JWT_EXPIRATION_DAYS); //Increase token expiration time for 2 week
+        calendar.add(Calendar.DAY_OF_YEAR, JWT_EXPIRATION_DAYS); //Set token expiration time for 2 week
 
         return Jwts.builder().
                 setSubject(userPrincipal.getUsername())

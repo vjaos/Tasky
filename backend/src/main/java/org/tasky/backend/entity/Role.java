@@ -3,6 +3,7 @@ package org.tasky.backend.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
+import org.tasky.backend.entity.enums.ERole;
 
 import javax.persistence.*;
 import java.util.HashSet;
