@@ -3,10 +3,11 @@ package org.tasky.backend.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.tasky.backend.dto.request.ProjectCreationRequest;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
-import org.tasky.backend.dto.request.ProjectCreationRequest;
 import org.tasky.backend.repository.ProjectRepository;
+import org.tasky.backend.repository.IssueRepository;
 
 import java.util.Optional;
 
@@ -15,9 +16,10 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private IssueRepository issueRepository;
 
-
-    public void createProject(ProjectCreationRequest projectCreationRequest, User user) {
+    public void save(ProjectCreationRequest projectCreationRequest, User user) {
         Project project = new Project();
 
         project.setName(projectCreationRequest.getProjectName());
@@ -32,27 +34,12 @@ public class ProjectService {
         return projectRepository.existsByName(name);
     }
 
-    public Optional<Project> findProject(@NonNull String name) {
-        return projectRepository.findProjectByName(name);
+    public boolean containsIssue(String issueTitle, Project project) {
+        return issueRepository.existsByTitleAndProject(issueTitle, project);
     }
 
     public void deleteProject(Project project) {
         projectRepository.delete(project);
     }
-
-    public void updateProject(ProjectCreationRequest project) {
-        Optional<Project> projectOptional =
-                projectRepository.findProjectByName(project.getProjectName());
-
-        if (projectOptional.isPresent()) {
-
-            Project projectFromDb = projectOptional.get();
-            projectFromDb.setName(project.getProjectName());
-            projectFromDb.setDescription(project.getProjectDescription());
-
-            projectRepository.save(projectFromDb);
-        }
-    }
-
 
 }

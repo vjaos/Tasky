@@ -1,8 +1,11 @@
 package org.tasky.backend.entity;
 
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 @Table(name = "issues")
 public class Issue {
@@ -19,9 +22,4 @@ public class Issue {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @OneToOne
-    private IssuePriority priority;
-
-    @OneToOne
-    private IssueType type;
 }

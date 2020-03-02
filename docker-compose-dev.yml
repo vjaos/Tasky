@@ -1,2 +1,34 @@
 version: "3"
+services:
 
+  backend:
+    container_name: tasky_backend
+    build:
+      context: ./backend
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+
+
+
+
+  postgres:
+    restart: always
+    image: postgres
+    volumes:
+      - postgres:/data/pgdata
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    ports:
+      - "5432:5432"
+
+
+
+volumes:
+  pgadmin:
+  postgres:

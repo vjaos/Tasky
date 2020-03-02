@@ -23,14 +23,13 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
     /**
-     * Method which will be triggered anytime
+     * Method that will be triggered anytime
      * unauthenticated User requests a secured HTTP resource
      * and an AuthenticationException is thrown.
      *
      * @param req  {@link HttpServletRequest}
      * @param resp {@link HttpServletResponse}
      * @param e    {@link AuthenticationException}
-     * @throws IOException
      */
     @Override
     public void commence(HttpServletRequest req,

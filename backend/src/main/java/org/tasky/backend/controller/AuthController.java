@@ -33,7 +33,7 @@ public class AuthController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -54,13 +54,12 @@ public class AuthController {
 
 
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if (userService.isUsernameTaken(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Username is already taken"));
         }
         userService.createUser(signUpRequest);
-        return ResponseEntity.ok(new MessageResponse("User registered succesfully!"));
+        return new ResponseEntity<>(new MessageResponse("User registered successfully!"), HttpStatus.CREATED);
     }
 
 }

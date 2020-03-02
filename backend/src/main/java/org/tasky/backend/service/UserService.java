@@ -40,17 +40,4 @@ public class UserService {
     public boolean isUsernameTaken(@NonNull String username) {
         return userRepository.existsUserByUsername(username);
     }
-
-    public void updateUser(@NonNull User user) {
-        Optional<User> userFromDbOptional = userRepository.findById(user.getId());
-        if (userFromDbOptional.isPresent()) {
-            User userFromDb = userFromDbOptional.get();
-
-            userFromDb.setUsername(user.getUsername());
-            userFromDb.setEmail(user.getEmail());
-            userFromDb.setProjects(user.getProjects());
-
-            userRepository.save(userFromDb);
-        }
-    }
 }

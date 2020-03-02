@@ -34,5 +34,3 @@ after_success:
   - docker build -t $BACKEND:$COMMIT ./backend
   - docker tag $BACKEND:$COMMIT $BACKEND:$TAG
   - docker push $BACKEND
-
-  - export

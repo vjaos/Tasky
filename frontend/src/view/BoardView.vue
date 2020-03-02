@@ -6,15 +6,11 @@
 
 <script>
     export default {
-        name: "BoardView"
+        name: "BoardView",
     }
 </script>
 
 <style scoped>
-    .container {
-        background-color: #f2f2f2;
-        border-radius: 25px;
-    }
 
 
 </style>

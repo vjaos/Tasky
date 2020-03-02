@@ -6,14 +6,21 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
+/**
+ * DTO class that used for creating issues for project.
+ *
+ *
+ * @see org.tasky.backend.entity.Issue
+ */
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class IssueRequest {
 
-    private String author;
+    @NotBlank
     private String title;
+    @NotBlank
     private String description;
-    private String projectName;
-
 }

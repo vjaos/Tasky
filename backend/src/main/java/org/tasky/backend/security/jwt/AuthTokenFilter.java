@@ -44,8 +44,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
      * @param req         {@link HttpServletRequest}
      * @param resp        {@link HttpServletResponse}
      * @param filterChain {@link FilterChain}
-     * @throws ServletException
-     * @throws IOException
      */
     @Override
     protected void doFilterInternal(HttpServletRequest req,
