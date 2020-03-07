@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.tasky.backend.dto.request.SignUpRequest;
 import org.tasky.backend.security.jwt.AuthEntryPointJwt;
-import org.tasky.backend.service.PostgresUserDetailService;
+import org.tasky.backend.service.security.PostgresUserDetailService;
 import org.tasky.backend.service.UserService;
 import org.tasky.backend.utils.JwtUtils;
 
@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.*;
+
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AuthController.class)
@@ -36,10 +37,10 @@ public class AuthControllerTest {
     @MockBean
     private PostgresUserDetailService userDetailService;
 
-
-    private ObjectMapper MAPPER = new ObjectMapper();
     @Autowired
     private MockMvc mockMvc;
+
+    private ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
     public void whenUserCreated_thenReturnMessage() throws Exception {
@@ -57,7 +58,6 @@ public class AuthControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message", is("User registered successfully!")));
     }
-
 
 
 }

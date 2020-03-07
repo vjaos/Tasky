@@ -24,8 +24,12 @@ public class UserService {
     private RoleRepository roleRepository;
 
 
-    public void createUser(@NonNull SignUpRequest signUpRequest) {
+    public void createUser(@NonNull SignUpRequest signUpRequest) throws IllegalArgumentException {
         User user = new User();
+
+        if (userRepository.existsUserByUsername(signUpRequest.getUsername())) {
+            throw new IllegalArgumentException();
+        }
 
         user.setUsername(signUpRequest.getUsername());
         user.setFirstName(signUpRequest.getFirstName());
@@ -35,9 +39,7 @@ public class UserService {
         user.setRoles(Collections.singleton(roleRepository.findByName(ROLE_USER)));
 
         userRepository.save(user);
+
     }
 
-    public boolean isUsernameTaken(@NonNull String username) {
-        return userRepository.existsUserByUsername(username);
-    }
 }

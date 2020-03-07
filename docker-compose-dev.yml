@@ -13,9 +13,6 @@ services:
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
 
-
-
-
   postgres:
     restart: always
     image: postgres

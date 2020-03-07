@@ -1,4 +1,4 @@
-package org.tasky.backend.service;
+package org.tasky.backend.service.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -30,7 +30,6 @@ public class PostgresUserDetailService implements UserDetailsService {
      * @throws UsernameNotFoundException, if there is no such user
      */
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         return userRepository.findUserByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("User " + username + " not found"));

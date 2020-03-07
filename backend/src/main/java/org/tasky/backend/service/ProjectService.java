@@ -1,15 +1,12 @@
 package org.tasky.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.tasky.backend.dto.request.ProjectCreationRequest;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
-import org.tasky.backend.repository.ProjectRepository;
 import org.tasky.backend.repository.IssueRepository;
-
-import java.util.Optional;
+import org.tasky.backend.repository.ProjectRepository;
 
 @Service
 public class ProjectService {

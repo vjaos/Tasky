@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.tasky.backend.entity.User;
-import org.tasky.backend.service.PostgresUserDetailService;
+import org.tasky.backend.service.security.PostgresUserDetailService;
 import org.tasky.backend.utils.JwtUtils;
 
 import javax.servlet.FilterChain;

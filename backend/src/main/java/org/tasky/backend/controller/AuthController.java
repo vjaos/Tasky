@@ -9,11 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.tasky.backend.entity.User;
+import org.springframework.web.server.ResponseStatusException;
 import org.tasky.backend.dto.request.LoginRequest;
 import org.tasky.backend.dto.request.SignUpRequest;
 import org.tasky.backend.dto.response.JwtResponse;
 import org.tasky.backend.dto.response.MessageResponse;
+import org.tasky.backend.entity.User;
 import org.tasky.backend.service.UserService;
 import org.tasky.backend.utils.JwtUtils;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
+    private static final String USERNAME_TAKEN_MESSAGE = "Username is already taken";
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -55,11 +57,12 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if (userService.isUsernameTaken(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Username is already taken"));
+        try {
+            userService.createUser(signUpRequest);
+            return new ResponseEntity<>(new MessageResponse("User registered successfully!"), HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, USERNAME_TAKEN_MESSAGE, e);
         }
-        userService.createUser(signUpRequest);
-        return new ResponseEntity<>(new MessageResponse("User registered successfully!"), HttpStatus.CREATED);
     }
 
 }

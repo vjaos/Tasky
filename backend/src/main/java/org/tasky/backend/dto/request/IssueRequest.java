@@ -9,8 +9,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 
 /**
- * DTO class that used for creating issues for project.
- *
+ * DTO class used for creating issues for project.
  *
  * @see org.tasky.backend.entity.Issue
  */

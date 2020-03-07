@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.tasky.backend.security.jwt.AuthEntryPointJwt;
 import org.tasky.backend.security.jwt.AuthTokenFilter;
-import org.tasky.backend.service.PostgresUserDetailService;
+import org.tasky.backend.service.security.PostgresUserDetailService;
 
 @Configuration
 @EnableWebSecurity
