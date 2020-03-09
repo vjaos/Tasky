@@ -3,5 +3,5 @@ coverage:
   range: "40...100"
 
 ignore:
-  - "/backend/src/main/java/org/tasky/backend/config"
-  - "/backend/src/main/java/org/tasky/backend/dto"
+  - "/backend/src/main/java/org/tasky/backend/config/**/*"
+  - "/backend/src/main/java/org/tasky/backend/dto/**/*"
