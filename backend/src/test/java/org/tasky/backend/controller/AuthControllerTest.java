@@ -1,28 +1,24 @@
 package org.tasky.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.tasky.backend.dto.request.SignUpRequest;
 import org.tasky.backend.security.jwt.AuthEntryPointJwt;
-import org.tasky.backend.service.security.PostgresUserDetailService;
 import org.tasky.backend.service.UserService;
+import org.tasky.backend.service.security.PostgresUserDetailService;
 import org.tasky.backend.utils.JwtUtils;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.*;
 
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(AuthController.class)
 public class AuthControllerTest {
 
@@ -37,27 +33,38 @@ public class AuthControllerTest {
     @MockBean
     private PostgresUserDetailService userDetailService;
 
+
     @Autowired
     private MockMvc mockMvc;
 
-    private ObjectMapper MAPPER = new ObjectMapper();
 
-    @Test
-    public void whenUserCreated_thenReturnMessage() throws Exception {
+    private SignUpRequest request;
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    @BeforeEach
+    public void setup() {
         SignUpRequest request = new SignUpRequest();
-
-        request.setUsername("TestUser");
+        request.setUsername("Test");
         request.setEmail("test@test.com");
         request.setFirstName("Test");
         request.setLastName("Test");
         request.setPassword("test123");
-
-        mockMvc.perform(post("/auth/signup")
-                .content(MAPPER.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message", is("User registered successfully!")));
+        this.request = request;
     }
 
+    @Test
+    public void whenUserCreated_thenReturnStatusOK() throws Exception {
+        mockMvc.perform(post("/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(MAPPER.writeValueAsString(request)))
+                .andExpect(status().isCreated());
+    }
+
+
+    @Test
+    public void whenRequestIsNotValid_thenStatusBadRequest() throws Exception {
+        mockMvc.perform(post("/auth/signup"))
+                .andExpect(status().isBadRequest());
+    }
 
 }

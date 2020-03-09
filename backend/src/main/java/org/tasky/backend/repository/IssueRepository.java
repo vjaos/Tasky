@@ -7,5 +7,4 @@ import org.tasky.backend.entity.Project;
 
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Long> {
-    boolean existsByTitleAndProject(String title, Project project);
 }

@@ -1,12 +1,9 @@
 package org.tasky.backend.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-@AllArgsConstructor
 public class MessageResponse {
     private String message;
+
+    public MessageResponse(String message) {
+        this.message = message;
+    }
 }

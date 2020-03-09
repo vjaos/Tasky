@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Utility class which main functions is:
+ * Utility class which main functions:
  * <ul>
  *     <li>generate a JWT</li>
  *     <li>extract username from JWT</li>

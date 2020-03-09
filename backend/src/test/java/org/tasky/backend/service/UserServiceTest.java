@@ -12,7 +12,9 @@ import org.tasky.backend.entity.User;
 import org.tasky.backend.repository.RoleRepository;
 import org.tasky.backend.repository.UserRepository;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -54,16 +56,17 @@ public class UserServiceTest {
     @Test
     public void shouldCreateUser() {
         userService.createUser(request);
-        verify(userRepository, times(1)).save(ArgumentMatchers.any(User.class));
+
+        verify(userRepository, times(1))
+                .save(ArgumentMatchers.any(User.class));
     }
 
 
     @Test
     public void whenUserAlreadyExists_thenFail() {
-        doReturn(true)
+        doReturn(Optional.of(new User()))
                 .when(userRepository)
-                .existsUserByUsername("TestUser");
-
+                .findUserByUsername("TestUser");
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(request));
     }
 

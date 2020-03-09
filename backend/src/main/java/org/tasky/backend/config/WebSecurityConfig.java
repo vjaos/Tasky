@@ -26,7 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private PostgresUserDetailService userDetailService;
 
     @Autowired
-    private AuthEntryPointJwt unauthorizedhandler;
+    private AuthEntryPointJwt unauthorizedHandler;
 
     @Bean
     @Override
@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and()
                     .csrf().disable()
                     .exceptionHandling()
-                    .authenticationEntryPoint(unauthorizedhandler)
+                    .authenticationEntryPoint(unauthorizedHandler)
                 .and()
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

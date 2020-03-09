@@ -12,7 +12,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "roles")
-@EqualsAndHashCode(of = {"id", "name"})
+@EqualsAndHashCode(of = {"name"})
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

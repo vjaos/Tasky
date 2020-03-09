@@ -1,5 +1,7 @@
 package org.tasky.backend.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +18,8 @@ import static org.tasky.backend.entity.enums.ERole.*;
 
 @Service
 public class UserService {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -24,12 +28,15 @@ public class UserService {
     private RoleRepository roleRepository;
 
 
-    public void createUser(@NonNull SignUpRequest signUpRequest) throws IllegalArgumentException {
+    public void createUser(@NonNull SignUpRequest signUpRequest) {
         User user = new User();
 
-        if (userRepository.existsUserByUsername(signUpRequest.getUsername())) {
-            throw new IllegalArgumentException();
-        }
+        Optional<User> existing = userRepository.findUserByUsername(signUpRequest.getUsername());
+
+        existing.ifPresent(it -> {
+            throw new IllegalArgumentException("User already exists: " + it.getUsername());
+        });
+
 
         user.setUsername(signUpRequest.getUsername());
         user.setFirstName(signUpRequest.getFirstName());
@@ -39,7 +46,7 @@ public class UserService {
         user.setRoles(Collections.singleton(roleRepository.findByName(ROLE_USER)));
 
         userRepository.save(user);
-
+        logger.info("New user has been created: {}", user.getUsername());
     }
 
 }

@@ -1,9 +1,8 @@
 package org.tasky.backend.dto.response;
 
-import lombok.AllArgsConstructor;
 import org.tasky.backend.entity.Issue;
 
-@AllArgsConstructor
+
 public class IssuesResponse {
 
     private String title;

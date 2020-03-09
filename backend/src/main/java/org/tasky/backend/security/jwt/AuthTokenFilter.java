@@ -29,7 +29,8 @@ import java.io.IOException;
  */
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
-
+    private static final String TOKEN_PREFIX = "Bearer ";
+    private static final String AUTH_HEADER = "Authorization";
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
@@ -63,7 +64,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                 userDetails.getAuthorities());
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
@@ -74,9 +74,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
+        String headerAuth = request.getHeader(AUTH_HEADER);
 
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(TOKEN_PREFIX)) {
             return headerAuth.substring(7);
         }
 

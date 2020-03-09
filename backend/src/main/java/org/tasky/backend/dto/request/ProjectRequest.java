@@ -10,10 +10,9 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ProjectCreationRequest {
+public class ProjectRequest {
     @NotBlank
     private String projectName;
     @NotBlank
     private String projectDescription;
-
 }

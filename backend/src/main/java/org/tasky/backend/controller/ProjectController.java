@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.tasky.backend.dto.request.IssueRequest;
-import org.tasky.backend.dto.request.ProjectCreationRequest;
+import org.tasky.backend.dto.request.ProjectRequest;
 import org.tasky.backend.dto.response.IssuesResponse;
 import org.tasky.backend.dto.response.MessageResponse;
 import org.tasky.backend.dto.response.ProjectResponse;
@@ -32,22 +32,15 @@ public class ProjectController {
     private IssueService issueService;
 
     @GetMapping("/{name}")
-    public ResponseEntity<?> getProject(@PathVariable("name") Project project) {
-        return ResponseEntity.ok(new ProjectResponse(project));
+    public ProjectResponse getProject(@PathVariable("name") Project project) {
+        return new ProjectResponse(project);
     }
 
     @PostMapping
-    public ResponseEntity<?> createProject(@AuthenticationPrincipal User user,
-                                           @Valid @RequestBody ProjectCreationRequest project) {
-
-        if (projectService.isProjectExist(project.getProjectName())) {
-            return ResponseEntity.badRequest().body(
-                    new MessageResponse("Project " + project.getProjectName() + " already exist"));
-
-        } else {
-            projectService.save(project, user);
-            return new ResponseEntity<>(new MessageResponse("Project successfully created"), HttpStatus.CREATED);
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createProject(@AuthenticationPrincipal User user,
+                              @Valid @RequestBody ProjectRequest project) {
+        projectService.save(project, user);
     }
 
     @DeleteMapping("/{name}")
@@ -65,16 +58,10 @@ public class ProjectController {
 
 
     @PostMapping("/{name}/issues")
-    public ResponseEntity<?> createProjectIssue(@PathVariable("name") Project project,
-                                                @Valid @RequestBody IssueRequest issue) {
-        if (projectService.containsIssue(issue.getTitle(), project)) {
-            return ResponseEntity.badRequest().body(
-                    new MessageResponse("Project already contains this issue: " + issue.getTitle()));
-        } else {
-            issueService.createIssue(project, issue);
-            return new ResponseEntity<>(new MessageResponse("Issue created!"), HttpStatus.CREATED);
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createProjectIssue(@PathVariable("name") Project project,
+                                   @Valid @RequestBody IssueRequest issue) {
+        issueService.createIssue(project, issue);
     }
-
 
 }
