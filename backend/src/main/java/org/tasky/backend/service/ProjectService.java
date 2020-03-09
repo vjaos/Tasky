@@ -35,10 +35,4 @@ public class ProjectService {
         projectRepository.save(project);
         logger.info("Project successfully created: " + request.getProjectName());
     }
-
-
-    public void deleteProject(Project project) {
-        projectRepository.delete(project);
-    }
-
 }

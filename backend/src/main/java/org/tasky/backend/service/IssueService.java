@@ -7,7 +7,6 @@ import org.tasky.backend.dto.request.IssueRequest;
 import org.tasky.backend.entity.Issue;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.repository.IssueRepository;
-import org.tasky.backend.repository.ProjectRepository;
 
 @Service
 public class IssueService {

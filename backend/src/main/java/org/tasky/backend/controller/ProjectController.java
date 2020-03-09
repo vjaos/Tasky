@@ -43,12 +43,6 @@ public class ProjectController {
         projectService.save(project, user);
     }
 
-    @DeleteMapping("/{name}")
-    public ResponseEntity<?> deleteProject(@PathVariable("name") Project project) {
-        projectService.deleteProject(project);
-        return ResponseEntity.ok(new MessageResponse("Project was successfully deleted!"));
-    }
-
 
     @GetMapping("/{name}/issues")
     public List<IssuesResponse> getAllIssues(@PathVariable("name") Project project) {

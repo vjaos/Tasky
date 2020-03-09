@@ -57,6 +57,7 @@ class ProjectServiceTest {
 
         doReturn(Optional.of(new Project())).when(projectRepository)
                 .findProjectByName(request.getProjectName());
+
         assertThrows(IllegalArgumentException.class, () -> projectService.save(request, user));
     }
 }
