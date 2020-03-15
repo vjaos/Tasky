@@ -3,18 +3,19 @@ package org.tasky.backend.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.tasky.backend.dto.request.SignUpRequest;
+import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
+import org.tasky.backend.repository.ProjectRepository;
 import org.tasky.backend.repository.RoleRepository;
 import org.tasky.backend.repository.UserRepository;
+import org.tasky.backend.service.impl.UserServiceImpl;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -22,10 +23,13 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class UserServiceTest {
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ProjectRepository projectRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -33,32 +37,20 @@ public class UserServiceTest {
     @Mock
     private RoleRepository roleRepository;
 
-    private SignUpRequest request;
+    private User user;
+
 
     @BeforeEach
     public void setup() {
         initMocks(this);
-        this.request = createRequest();
+        initUser();
     }
 
-
-    private SignUpRequest createRequest() {
-        SignUpRequest request = new SignUpRequest();
-
-        request.setUsername("TestUser");
-        request.setEmail("test@test.com");
-        request.setFirstName("Test");
-        request.setLastName("Test");
-        request.setPassword("test123");
-        return request;
-    }
 
     @Test
     public void shouldCreateUser() {
-        userService.createUser(request);
-
-        verify(userRepository, times(1))
-                .save(ArgumentMatchers.any(User.class));
+        User savedUser = userService.saveUser(user);
+        verify(userRepository, times(1)).save(user);
     }
 
 
@@ -66,8 +58,29 @@ public class UserServiceTest {
     public void whenUserAlreadyExists_thenFail() {
         doReturn(Optional.of(new User()))
                 .when(userRepository)
-                .findUserByUsername("TestUser");
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(request));
+                .findByUsername("test");
+
+        assertThrows(IllegalArgumentException.class, () -> userService.saveUser(user));
     }
 
+    @Test
+    public void shouldDeleteUser() {
+        userService.deleteUserById(user.getId());
+        verify(userRepository, times(1)).deleteById(user.getId());
+    }
+
+    @Test
+    public void shouldReturnProjectByUserAndProjectId() {
+        Optional<Project> project = userService.getProjectByUserAndProjectId(user, 1L);
+        verify(projectRepository, times(1)).findProjectByOwnerAndId(user, 1L);
+    }
+
+
+    private void initUser() {
+        User user = new User();
+        user.setUsername("test");
+        user.setPassword("test123");
+        user.setEmail("test@test.com");
+        this.user = user;
+    }
 }

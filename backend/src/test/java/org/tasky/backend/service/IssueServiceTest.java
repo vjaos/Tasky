@@ -6,11 +6,10 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.tasky.backend.dto.request.IssueRequest;
-import org.tasky.backend.dto.request.ProjectRequest;
 import org.tasky.backend.entity.Issue;
 import org.tasky.backend.entity.Project;
-import org.tasky.backend.entity.User;
 import org.tasky.backend.repository.IssueRepository;
+import org.tasky.backend.service.impl.IssueServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
@@ -20,7 +19,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 class IssueServiceTest {
 
     @InjectMocks
-    private IssueService issueService;
+    private IssueServiceImpl issueServiceImpl;
 
     @Mock
     private IssueRepository issueRepository;
@@ -32,33 +31,21 @@ class IssueServiceTest {
 
     @Test
     public void shouldCreateNewIssue() {
+        Issue issue = new Issue();
+
         IssueRequest request = new IssueRequest();
 
-        request.setTitle("Test issue");
-        request.setDescription("Test test test");
+        issue.setTitle("Test issue");
+        issue.setDescription("Test test test");
 
         Project project = new Project();
+        issue.setProject(project);
 
-        issueService.createIssue(project, request);
+        issueServiceImpl.save(issue);
 
         verify(issueRepository, times(1))
                 .save(ArgumentMatchers.any(Issue.class));
     }
 
-    @Test
-    public void whenProjectAlreadyContainsIssue_thenFail() {
-        IssueRequest request = new IssueRequest();
-
-        request.setTitle("Test issue");
-        request.setDescription("Test test test");
-
-        Issue issue = new Issue();
-        issue.setTitle("Test issue");
-
-        Project project = new Project();
-        project.getIssues().add(issue);
-
-        assertThrows(IllegalArgumentException.class, () -> issueService.createIssue(project, request));
-    }
 
 }

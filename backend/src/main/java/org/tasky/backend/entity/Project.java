@@ -8,8 +8,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Optional.ofNullable;
-
 @Data
 @Entity
 @Table(name = "projects")
@@ -26,9 +24,9 @@ public class Project {
     @Column
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User owner;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<Issue> issues = new ArrayList<>();

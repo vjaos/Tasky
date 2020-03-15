@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.tasky.backend.entity.Project;
+import org.tasky.backend.entity.User;
 
 import java.util.Optional;
 
@@ -19,16 +20,30 @@ class ProjectRepositoryTest {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Test
-    public void saveAndFindProjectByName() {
+    public void saveAndFindProjectByUserAndName() {
+        User user = new User();
+        user.setUsername("test");
+        user.setFirstName("FirstName");
+        user.setLastName("Lastname");
+        user.setPassword("test123");
+        user.setEmail("test@test.com");
+        userRepository.save(user);
+
         Project project = new Project();
         project.setName("Tasky");
+        project.setDescription("Description");
+        project.setOwner(user);
 
         projectRepository.save(project);
         Optional<Project> found = projectRepository.findProjectByName(project.getName());
 
         assertTrue(found.isPresent());
         assertEquals(found.get().getName(), project.getName());
+        assertEquals(user.getUsername(), project.getOwner().getUsername());
     }
 
 }

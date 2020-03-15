@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
-    public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> webServerCastomizer() {
+    public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> webServerCustomizer() {
         return container -> container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/"));
     }
 }

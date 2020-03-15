@@ -38,7 +38,7 @@ class PostgresUserDetailServiceTest {
 
         doReturn(Optional.of(user))
                 .when(userRepository)
-                .findUserByUsername("name");
+                .findByUsername("name");
 
         UserDetails loadedUser = userDetailService.loadUserByUsername("name");
         assertEquals(user, loadedUser);

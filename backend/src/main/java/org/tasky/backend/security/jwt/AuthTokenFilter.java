@@ -38,7 +38,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 
     /**
-     * Method that implement parsing and validating of JWT,
+     * Method implement parsing and validating of JWT,
      * loading User details using {@link PostgresUserDetailService},
      * checking Authorization using {@link UsernamePasswordAuthenticationToken}
      *

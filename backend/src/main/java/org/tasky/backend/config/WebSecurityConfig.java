@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(5);
     }
 
     @Autowired
@@ -60,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/auth/**", "/").permitAll()
+                    .antMatchers("/api/auth/**", "/").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

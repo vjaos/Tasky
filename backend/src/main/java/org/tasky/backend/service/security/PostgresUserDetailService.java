@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.tasky.backend.repository.UserRepository;
 
 
@@ -31,7 +30,7 @@ public class PostgresUserDetailService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        return userRepository.findUserByUsername(username).orElseThrow(() ->
+        return userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("User " + username + " not found"));
     }
 }

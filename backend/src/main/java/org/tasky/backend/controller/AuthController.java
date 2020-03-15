@@ -6,22 +6,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.tasky.backend.config.TaskyConstants;
 import org.tasky.backend.dto.request.LoginRequest;
-import org.tasky.backend.dto.request.SignUpRequest;
 import org.tasky.backend.dto.response.JwtResponse;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.service.UserService;
 import org.tasky.backend.utils.JwtUtils;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(value = TaskyConstants.AUTH_PATH)
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
 
@@ -45,18 +43,18 @@ public class AuthController {
 
         User userDetails = (User) authentication.getPrincipal();
 
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), roles));
+        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername()));
     }
 
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        userService.createUser(signUpRequest);
+    public void registerUser(@RequestBody User user) {
+        try {
+            userService.saveUser(user);
+        } catch (IllegalArgumentException iae) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, iae.getMessage(), iae);
+        }
     }
 }
 

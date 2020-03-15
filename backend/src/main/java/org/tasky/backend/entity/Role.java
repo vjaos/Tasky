@@ -3,7 +3,7 @@ package org.tasky.backend.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
-import org.tasky.backend.entity.enums.ERole;
+import org.tasky.backend.entity.enums.RoleType;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ public class Role implements GrantedAuthority {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "name")
-    private ERole name;
+    private RoleType name;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
