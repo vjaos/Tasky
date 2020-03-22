@@ -7,7 +7,8 @@ import java.util.Optional;
 
 public interface ProjectService {
 
-    Project save(Project project);
+    Optional<Project> save(Project project, String username);
 
-    Optional<Project> getProjectByUserAndProjectId(User user, Long id);
+    Optional<Project> updateProject(Project project, Long projectId);
+
 }

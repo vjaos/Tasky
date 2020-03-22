@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.tasky.backend.dto.request.IssueRequest;
 import org.tasky.backend.entity.Issue;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.repository.IssueRepository;
@@ -32,9 +31,6 @@ class IssueServiceTest {
     @Test
     public void shouldCreateNewIssue() {
         Issue issue = new Issue();
-
-        IssueRequest request = new IssueRequest();
-
         issue.setTitle("Test issue");
         issue.setDescription("Test test test");
 

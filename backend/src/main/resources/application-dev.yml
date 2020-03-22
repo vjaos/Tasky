@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/postgres
+    username: ${POSTGRES_USER:user}
+    password: ${POSTGRES_PASSWORD:password}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+  liquibase:
+    change-log: classpath:db/db.changelog-master.xml
+    user: ${POSTGRES_USER:user}
+    password: ${POSTGRES_PASSWORD:password}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/postgres
+    drop-first: true
+
+server:
+  port: 8080

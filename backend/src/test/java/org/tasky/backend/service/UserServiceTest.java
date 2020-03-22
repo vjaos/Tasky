@@ -49,7 +49,7 @@ public class UserServiceTest {
 
     @Test
     public void shouldCreateUser() {
-        User savedUser = userService.saveUser(user);
+        userService.saveUser(user);
         verify(userRepository, times(1)).save(user);
     }
 
@@ -81,6 +81,8 @@ public class UserServiceTest {
         user.setUsername("test");
         user.setPassword("test123");
         user.setEmail("test@test.com");
+        user.setFirstName("Bla");
+        user.setLastName("bla");
         this.user = user;
     }
 }

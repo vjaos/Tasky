@@ -1,7 +1,5 @@
 package org.tasky.backend.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +34,7 @@ public class UserServiceImpl implements UserService {
         });
 
         user.setPassword(passEncoder.encode(user.getPassword()));
-        user.getRoles().add(roleRepository.findByName(RoleType.ROLE_USER));
+        user.getRoles().add(roleRepository.findByName(RoleType.ROLE_USER.toString()));
 
         return userRepository.save(user);
     }
@@ -50,6 +48,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<Project> getProjectByUserAndProjectId(User user, Long projectId) {
         return projectRepository.findProjectByOwnerAndId(user, projectId);
+    }
+
+    @Override
+    public Optional<User> findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
 }

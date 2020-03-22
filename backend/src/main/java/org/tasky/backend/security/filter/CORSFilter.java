@@ -1,4 +1,4 @@
-package org.tasky.backend.config;
+package org.tasky.backend.security.filter;
 
 
 import org.springframework.core.Ordered;

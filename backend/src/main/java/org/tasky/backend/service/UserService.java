@@ -13,4 +13,6 @@ public interface UserService {
 
     Optional<Project> getProjectByUserAndProjectId(User user, Long projectId);
 
+    Optional<User> findUserByUsername(String username);
+
 }

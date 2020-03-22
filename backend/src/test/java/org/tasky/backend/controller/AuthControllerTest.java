@@ -1,6 +1,5 @@
 package org.tasky.backend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.tasky.backend.dto.request.LoginRequest;
 import org.tasky.backend.entity.User;
+import org.tasky.backend.entity.enums.Status;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,22 +18,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@Sql(value = {"/import-user-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"/import-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class AuthControllerTest {
-    @Autowired
     private AuthController authController;
-
-    @Autowired
     private MockMvc mockMvc;
-
+    private ObjectMapper MAPPER;
 
     @Autowired
-    private ObjectMapper MAPPER;
+    public AuthControllerTest(AuthController authController,
+                              MockMvc mockMvc,
+                              ObjectMapper MAPPER) {
+        this.authController = authController;
+        this.mockMvc = mockMvc;
+        this.MAPPER = MAPPER;
+    }
 
 
     @Test
-    public void whenUserCreated_thenReturnStatusOK() throws Exception {
+    public void whenUserCreated_thenReturnStatusCreated() throws Exception {
         User user = new User();
         user.setUsername("Test");
         user.setEmail("test@test.com");
@@ -55,6 +56,8 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Sql(value = {"/import-user-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/import-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void whenUserAlreadyExists_thenStatusBadRequest() throws Exception {
         User user = new User();
         user.setUsername("jaje");
@@ -62,6 +65,7 @@ public class AuthControllerTest {
         user.setFirstName("Test");
         user.setLastName("Test");
         user.setPassword("test123");
+        user.setStatus(Status.ACTIVE);
 
         mockMvc.perform(post("/api/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,6 +74,8 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Sql(value = {"/import-user-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/import-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void shouldAuthorizeUser() throws Exception {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername("jaje");

@@ -1,5 +1,6 @@
 package org.tasky.backend.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +23,21 @@ class ProjectRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
+    private User user;
 
-    @Test
-    public void saveAndFindProjectByUserAndName() {
+    @BeforeEach
+    public void saveUserToDB() {
         User user = new User();
         user.setUsername("test");
         user.setFirstName("FirstName");
         user.setLastName("Lastname");
         user.setPassword("test123");
         user.setEmail("test@test.com");
-        userRepository.save(user);
+        this.user = userRepository.save(user);
+    }
 
+    @Test
+    public void saveAndFindProjectByUserAndName() {
         Project project = new Project();
         project.setName("Tasky");
         project.setDescription("Description");
@@ -45,5 +50,6 @@ class ProjectRepositoryTest {
         assertEquals(found.get().getName(), project.getName());
         assertEquals(user.getUsername(), project.getOwner().getUsername());
     }
+
 
 }

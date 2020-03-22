@@ -21,12 +21,13 @@ import org.tasky.backend.service.security.PostgresUserDetailService;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
     @Autowired
     private PostgresUserDetailService userDetailService;
-
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
+    @Autowired
+    private AuthTokenFilter authTokenFilter;
+
 
     @Bean
     @Override
@@ -39,8 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder(5);
     }
 
-    @Autowired
-    private AuthTokenFilter authTokenFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -52,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
-                    .csrf().disable()
+                .csrf().disable()
                     .exceptionHandling()
                     .authenticationEntryPoint(unauthorizedHandler)
                 .and()
@@ -62,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers("/api/auth/**", "/").permitAll()
                 .anyRequest().authenticated();
+
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -1,41 +1,33 @@
 package org.tasky.backend.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.tasky.backend.entity.enums.IssueStatus;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
 @Table(name = "issues")
-public class Issue {
+public class Issue extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    @Column
-    private Long id;
-    @Column
+
+    @Column(name = "title")
     private String title;
-    @Column
+    @Column(name = "description")
     private String description;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author")
+    @JoinColumn(name = "user_id")
     private User author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "current_status")
-    private IssueStatus currentStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "issue_status")
+    private IssueStatus issueStatus;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "users_issues",
-            joinColumns = {@JoinColumn(name = "issue_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private List<User> users = new ArrayList<>();
-
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;

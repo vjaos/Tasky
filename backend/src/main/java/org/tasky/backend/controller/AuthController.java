@@ -5,45 +5,50 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.tasky.backend.config.TaskyConstants;
 import org.tasky.backend.dto.request.LoginRequest;
 import org.tasky.backend.dto.response.JwtResponse;
 import org.tasky.backend.entity.User;
+import org.tasky.backend.security.jwt.JwtTokenProvider;
 import org.tasky.backend.service.UserService;
-import org.tasky.backend.utils.JwtUtils;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = TaskyConstants.AUTH_PATH)
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
 
+    private AuthenticationManager authenticationManager;
+    private UserService userService;
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private JwtUtils jwtUtils;
+    public AuthController(AuthenticationManager authenticationManager,
+                          UserService userService,
+                          JwtTokenProvider jwtTokenProvider) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+        final String username = loginRequest.getUsername();
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, loginRequest.getPassword())
         );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        User user = userService.findUserByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("User with username '%s' not found", username)));
 
-        User userDetails = (User) authentication.getPrincipal();
+        String jwt = jwtTokenProvider.createToken(username);
 
-        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername()));
+        return ResponseEntity.ok(new JwtResponse(jwt, user.getUsername()));
     }
 
 

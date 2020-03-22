@@ -1,32 +1,19 @@
 package org.tasky.backend.entity;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.security.core.GrantedAuthority;
-import org.tasky.backend.entity.enums.RoleType;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "roles")
-@EqualsAndHashCode(of = {"name"})
-public class Role implements GrantedAuthority {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Role extends BaseEntity {
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "name")
-    private RoleType name;
+    private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users = new HashSet<>();
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    private List<User> users;
 
-    @Override
-    public String getAuthority() {
-        return name.toString();
-    }
 }

@@ -1,47 +1,32 @@
 package org.tasky.backend.service.security;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.tasky.backend.entity.User;
-import org.tasky.backend.repository.UserRepository;
-
-import java.util.Optional;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-
+@RunWith(SpringRunner.class)
+@SpringBootTest
 class PostgresUserDetailServiceTest {
 
-    @InjectMocks
+    @Autowired
     private PostgresUserDetailService userDetailService;
 
-    @Mock
-    private UserRepository userRepository;
-
-    @BeforeEach
-    public void setup() {
-        initMocks(this);
-    }
-
-
     @Test
+    @Sql(value = {"/import-user-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/import-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void whenUserExists_thenLoadByUsername() {
-        User user = new User();
-
-        doReturn(Optional.of(user))
-                .when(userRepository)
-                .findByUsername("name");
-
-        UserDetails loadedUser = userDetailService.loadUserByUsername("name");
-        assertEquals(user, loadedUser);
+        String username = "jaje";
+        UserDetails loadedUser = userDetailService.loadUserByUsername(username);
+        assertEquals(username, loadedUser.getUsername());
     }
 
     @Test
