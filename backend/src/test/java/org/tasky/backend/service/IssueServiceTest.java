@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.tasky.backend.TestUtils;
 import org.tasky.backend.entity.Issue;
 import org.tasky.backend.entity.Project;
+import org.tasky.backend.entity.User;
 import org.tasky.backend.repository.IssueRepository;
 import org.tasky.backend.service.impl.IssueServiceImpl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 class IssueServiceTest {
@@ -23,25 +23,40 @@ class IssueServiceTest {
     @Mock
     private IssueRepository issueRepository;
 
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private UserService userService;
+
+    private User user;
+    private Project project;
+    private Issue issue;
+
     @BeforeEach
     public void setup() {
         initMocks(this);
+        this.user = TestUtils.initUser();
+        this.project = TestUtils.initProject(user);
+        this.issue = TestUtils.initIssue(user, project);
     }
 
     @Test
     public void shouldCreateNewIssue() {
-        Issue issue = new Issue();
-        issue.setTitle("Test issue");
-        issue.setDescription("Test test test");
+        doReturn(project)
+                .when(projectService)
+                .findProjectById(project.getId());
 
-        Project project = new Project();
-        issue.setProject(project);
+        doReturn(new User())
+                .when(userService)
+                .findUserByUsername(user.getUsername());
 
-        issueServiceImpl.save(issue);
 
-        verify(issueRepository, times(1))
-                .save(ArgumentMatchers.any(Issue.class));
+        issueServiceImpl.createIssue(issue, project.getId(), user.getUsername());
+
+        verify(
+                issueRepository,
+                times(1)
+        ).save(ArgumentMatchers.any(Issue.class));
     }
-
-
 }

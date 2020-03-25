@@ -3,18 +3,27 @@ package org.tasky.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.tasky.backend.entity.enums.IssueStatus;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 
 @Data
 @Entity
 @Table(name = "issues")
+@EqualsAndHashCode(callSuper = true)
 public class Issue extends BaseEntity {
 
-
+    @NotNull
+    @NotBlank
     @Column(name = "title")
     private String title;
+
+    @NotNull
+    @NotBlank
     @Column(name = "description")
     private String description;
 

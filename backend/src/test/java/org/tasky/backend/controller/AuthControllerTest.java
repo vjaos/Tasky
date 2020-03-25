@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.tasky.backend.config.TaskyConstants;
 import org.tasky.backend.dto.request.LoginRequest;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.entity.enums.Status;
@@ -22,6 +23,8 @@ public class AuthControllerTest {
     private AuthController authController;
     private MockMvc mockMvc;
     private ObjectMapper MAPPER;
+    private final String SIGN_UP_PATH = TaskyConstants.AUTH_PATH + "/signup";
+    private final String LOGIN_PATH = TaskyConstants.AUTH_PATH + "/login";
 
     @Autowired
     public AuthControllerTest(AuthController authController,
@@ -42,7 +45,8 @@ public class AuthControllerTest {
         user.setLastName("Test");
         user.setPassword("test123");
 
-        mockMvc.perform(post("/api/auth/signup")
+
+        mockMvc.perform(post(SIGN_UP_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(MAPPER.writeValueAsString(user)))
                 .andExpect(status().isCreated());
@@ -51,7 +55,7 @@ public class AuthControllerTest {
 
     @Test
     public void whenRequestIsNotValid_thenStatusBadRequest() throws Exception {
-        mockMvc.perform(post("/api/auth/signup"))
+        mockMvc.perform(post(SIGN_UP_PATH))
                 .andExpect(status().isBadRequest());
     }
 
@@ -67,7 +71,7 @@ public class AuthControllerTest {
         user.setPassword("test123");
         user.setStatus(Status.ACTIVE);
 
-        mockMvc.perform(post("/api/auth/signup")
+        mockMvc.perform(post(SIGN_UP_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(MAPPER.writeValueAsString(user)))
                 .andExpect(status().isBadRequest());
@@ -81,7 +85,7 @@ public class AuthControllerTest {
         loginRequest.setUsername("jaje");
         loginRequest.setPassword("test123");
 
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post(LOGIN_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(MAPPER.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk());
@@ -94,7 +98,7 @@ public class AuthControllerTest {
         loginRequest.setUsername("jaje");
         loginRequest.setPassword("t1231233");
 
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post(LOGIN_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(MAPPER.writeValueAsString(loginRequest)))
                 .andExpect(status().isUnauthorized());

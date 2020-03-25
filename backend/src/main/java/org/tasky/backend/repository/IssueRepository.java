@@ -9,7 +9,6 @@ import org.tasky.backend.entity.Project;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
 public interface IssueRepository extends JpaRepository<Issue, Long> {
 
     List<Issue> findAllByProject(Project project);

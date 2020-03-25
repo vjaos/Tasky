@@ -7,12 +7,12 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User saveUser(User user);
+    void saveUser(User user);
 
     void deleteUserById(Long id);
 
-    Optional<Project> getProjectByUserAndProjectId(User user, Long projectId);
+    Optional<Project> getUserProjectById(String username, Long projectId);
 
-    Optional<User> findUserByUsername(String username);
+    User findUserByUsername(String username);
 
 }

@@ -2,16 +2,20 @@ package org.tasky.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Data
 @Entity
 @Table(name = "projects")
+@EqualsAndHashCode(callSuper = true)
 public class Project extends BaseEntity {
 
     @NaturalId
@@ -32,6 +36,6 @@ public class Project extends BaseEntity {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "project", cascade = CascadeType.REMOVE)
-    private List<Issue> issues;
+    private List<Issue> issues = new ArrayList<>();
 
 }
