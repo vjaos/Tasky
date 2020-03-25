@@ -13,6 +13,7 @@ import org.tasky.backend.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,7 +35,27 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public void createIssue(Issue issueData, Long projectId, String username) throws EntityNotFoundException {
+    public Optional<Issue> getOne(Long issueId, Long projectId) {
+        Project project = projectService.findProjectById(projectId);
+        return issueRepository.findByProjectAndId(project, issueId);
+    }
+
+    @Override
+    public Optional<Issue> updateIssue(Long issueId, Issue issueData) {
+        Issue issueFromDb = issueRepository.findById(issueId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Isse with id %d not found", issueId))
+                );
+
+        issueFromDb.setTitle(issueData.getTitle());
+        issueFromDb.setDescription(issueData.getDescription());
+        issueFromDb.setIssueStatus(issueData.getIssueStatus());
+
+        return Optional.ofNullable(issueRepository.save(issueData));
+    }
+
+    @Override
+    public Optional<Issue> createIssue(Issue issueData, Long projectId, String username) throws EntityNotFoundException {
         Project project = projectService.findProjectById(projectId);
         User user = userService.findUserByUsername(username);
 
@@ -44,7 +65,7 @@ public class IssueServiceImpl implements IssueService {
         issue.setTitle(issueData.getTitle());
         issue.setDescription(issueData.getDescription());
 
-        issueRepository.save(issue);
+        return Optional.ofNullable(issueRepository.save(issue));
     }
 
 }

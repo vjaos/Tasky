@@ -32,18 +32,54 @@ public class ProjectController {
         this.issueService = issueService;
     }
 
-    @GetMapping(name = "/{projectId}/issues", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{projectId}/issues", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllProjectIssues(@PathVariable("projectId") Long projectId) {
+
         List<Issue> issues = issueService.getIssuesByProjectId(projectId);
         return new ResponseEntity<>(issues, HttpStatus.OK);
     }
 
-    @GetMapping(name = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getOne(@PathVariable("id") Long id) {
+    @GetMapping(value = "/{projectId}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getIssueByIdAndProjectId(@PathVariable("projectId") Long projectId,
+                                                      @PathVariable("issueId") Long issueId) {
+
+        return issueService.getOne(projectId, issueId)
+                .map(it -> new ResponseEntity<>(it, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping(value = "/{projectId}/issues/{issueId}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateIssue(@PathVariable("projectId") Long projectId,
+                                         @PathVariable("issueId") Long issueId,
+                                         @RequestBody @Valid Issue issueData) {
+
+        return issueService.updateIssue(issueId, issueData)
+                .map(it -> new ResponseEntity<>(it, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
+
+
+    @PostMapping(value = "/{projectId}/issues",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createIssue(@PathVariable("projectId") Long projectId,
+                                         @RequestBody @Valid Issue issueData,
+                                         @AuthenticationPrincipal JwtUserDetails userDetails) {
+
+        return issueService.createIssue(issueData, projectId, userDetails.getUsername())
+                .map(it -> new ResponseEntity<>(it, HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
+
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getIssue(@PathVariable("id") Long id) {
         return new ResponseEntity<>(projectService.findProjectById(id), HttpStatus.OK);
     }
 
-    @PutMapping(name = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createProject(@PathVariable("id") Long projectId,
                                            @Valid @RequestBody Project projectData) {
         Optional<Project> updatedProject = projectService.updateProject(projectData, projectId);
@@ -53,7 +89,9 @@ public class ProjectController {
                 .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
-    @PostMapping(name = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createProject(@AuthenticationPrincipal JwtUserDetails jwtUserDetails,
                                            @Valid @RequestBody Project project) {
 
