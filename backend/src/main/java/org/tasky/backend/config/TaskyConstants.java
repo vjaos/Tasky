@@ -6,7 +6,7 @@ public interface TaskyConstants {
     String TASKS = "tasks";
     String PROJECTS = "projects";
     String USERS = "users";
-
+    String TOKEN_TYPE = "Bearer ";
 
     String AUTH_PATH = API_URL + AUTH;
     String PROJECTS_PATH = API_URL + PROJECTS;

@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.tasky.backend.TestUtils;
 import org.tasky.backend.entity.User;
 
 import java.util.Optional;
@@ -20,13 +21,8 @@ class UserRepositoryTest {
 
     @Test
     public void shouldSaveAndFindUserByName() {
-        User user = new User();
+        User user = TestUtils.initUser();
 
-        user.setUsername("Test1");
-        user.setFirstName("first");
-        user.setLastName("last");
-        user.setPassword("password");
-        user.setEmail("test@mail.test");
         userRepository.save(user);
 
         Optional<User> found = userRepository.findByUsername(user.getUsername());

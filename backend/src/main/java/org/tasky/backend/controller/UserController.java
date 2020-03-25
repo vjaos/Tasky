@@ -12,34 +12,33 @@ import org.springframework.web.bind.annotation.RestController;
 import org.tasky.backend.config.TaskyConstants;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
+import org.tasky.backend.service.ProjectService;
 import org.tasky.backend.service.UserService;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = TaskyConstants.USERS_PATH)
 public class UserController {
-    @Autowired
     private UserService userService;
+    private ProjectService projectService;
 
-    @GetMapping(value = "/{username}/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getUserById(@PathVariable("username") User user) {
+    @Autowired
+    public UserController(UserService userService,
+                          ProjectService projectService) {
+        this.userService = userService;
+        this.projectService = projectService;
+    }
+
+    @GetMapping(value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserByUsername(@PathVariable("username") String username) {
+        User user = userService.findUserByUsername(username);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{username}/projects/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getUserProjects(@PathVariable("username") User user) {
-        return new ResponseEntity<>(user.getProjects(), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/{username}/projects/{projectId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getParticularProject(@PathVariable Long projectId,
-                                                  @PathVariable("username") User user) {
-        Optional<Project> project = userService.getProjectByUserAndProjectId(user, projectId);
-        if (project.isPresent()) {
-            return new ResponseEntity<>(project.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping(value = "/{username}/projects", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserProjects(@PathVariable("username") String username) {
+        List<Project> projects = projectService.getAllUserProject(username);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 }

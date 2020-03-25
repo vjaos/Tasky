@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.tasky.backend.TestUtils;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
 
@@ -26,14 +27,8 @@ class ProjectRepositoryTest {
     private User user;
 
     @BeforeEach
-    public void saveUserToDB() {
-        User user = new User();
-        user.setUsername("test");
-        user.setFirstName("FirstName");
-        user.setLastName("Lastname");
-        user.setPassword("test123");
-        user.setEmail("test@test.com");
-        this.user = userRepository.save(user);
+    public void inits() {
+        saveUsertoDb();
     }
 
     @Test
@@ -51,5 +46,10 @@ class ProjectRepositoryTest {
         assertEquals(user.getUsername(), project.getOwner().getUsername());
     }
 
+
+    private void saveUsertoDb() {
+        User userToSave = TestUtils.initUser();
+        this.user = userRepository.save(userToSave);
+    }
 
 }

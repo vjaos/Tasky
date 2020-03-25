@@ -15,4 +15,4 @@ spring:
     url: ${SPRING_DATASOURCE_URL}
 
 server:
-  port: 9000
+  port: ${PORT}

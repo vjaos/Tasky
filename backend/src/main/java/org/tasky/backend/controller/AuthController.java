@@ -14,7 +14,6 @@ import org.tasky.backend.entity.User;
 import org.tasky.backend.security.jwt.JwtTokenProvider;
 import org.tasky.backend.service.UserService;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 @RestController
@@ -42,13 +41,9 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(username, loginRequest.getPassword())
         );
 
-        User user = userService.findUserByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("User with username '%s' not found", username)));
-
         String jwt = jwtTokenProvider.createToken(username);
 
-        return ResponseEntity.ok(new JwtResponse(jwt, user.getUsername()));
+        return ResponseEntity.ok(new JwtResponse(jwt, username));
     }
 
 

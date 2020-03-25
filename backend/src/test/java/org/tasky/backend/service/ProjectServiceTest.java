@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.tasky.backend.TestUtils;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.repository.ProjectRepository;
@@ -30,23 +31,20 @@ class ProjectServiceTest {
     @BeforeEach
     public void setup() {
         initMocks(this);
-        initUser();
+        this.user = TestUtils.initUser();
+        this.project = TestUtils.initProject(user);
     }
 
     private User user;
+    private Project project;
 
     @Test
-    public void shouldSaveProject() {
-        Project project = new Project();
-        project.setName("Tasky");
-        project.setDescription("Descr");
-        project.setOwner(user);
-
-        doReturn(Optional.of(user))
+    public void shouldCreateProject() {
+        doReturn(user)
                 .when(userService)
                 .findUserByUsername(user.getUsername());
 
-        projectService.save(project, user.getUsername());
+        projectService.createProject(project, user.getUsername());
 
         verify(projectRepository, times(1)).save(project);
     }
@@ -54,48 +52,39 @@ class ProjectServiceTest {
 
     @Test
     public void whenProjectAlreadyExists_thenThrowIllegalArgumentException() {
-        Project project = new Project();
-        project.setName("Tasky");
-        project.setDescription("Descr");
-        project.setOwner(user);
 
         doReturn(Optional.of(new Project()))
-                .when(projectRepository).findProjectByName(project.getName());
+                .when(projectRepository)
+                .findProjectByName(project.getName());
 
-        assertThrows(IllegalArgumentException.class, () -> projectService.save(project, user.getUsername()));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> projectService.createProject(project, user.getUsername())
+        );
     }
 
-    @Test
-    public void whenUserDoesNotExists_theThrowEntityNotFoundException() {
-        assertThrows(EntityNotFoundException.class,
-                () -> projectService.save(new Project(), user.getUsername()));
-    }
 
     @Test
     public void shouldUpdateProjectInformation() {
-        Project project = new Project();
-        project.setName("Name");
-        project.setDescription("Desc");
-        project.setId(1L);
-
-        doReturn(Optional.of(project)).when(projectRepository)
+        doReturn(Optional.of(project))
+                .when(projectRepository)
                 .findById(project.getId());
 
         projectService.updateProject(project, project.getId());
-        verify(projectRepository, times(1)).save(project);
+
+        verify(
+                projectRepository,
+                times(1)
+        ).save(project);
     }
 
     @Test
     public void whenProjectNotFound_thenThrowEntityNotFoundException() {
-        assertThrows(EntityNotFoundException.class,
-                () -> projectService.updateProject(new Project(), 1l));
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> projectService.updateProject(new Project(), 1L)
+        );
     }
 
-    private void initUser() {
-        User user = new User();
-        user.setUsername("test");
-        user.setPassword("test123");
-        user.setEmail("test@test.com");
-        this.user = user;
-    }
+
 }
