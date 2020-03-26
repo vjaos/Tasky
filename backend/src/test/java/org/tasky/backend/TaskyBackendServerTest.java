@@ -10,6 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class TaskyBackendServerTest {
 
     @Test
-    public void contextLoad() {
+    public void     contextLoad() {
     }
 }

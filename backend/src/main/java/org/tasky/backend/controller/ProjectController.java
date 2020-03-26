@@ -75,7 +75,7 @@ public class ProjectController {
 
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getIssue(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getProject(@PathVariable("id") Long id) {
         return new ResponseEntity<>(projectService.findProjectById(id), HttpStatus.OK);
     }
 
@@ -93,7 +93,7 @@ public class ProjectController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createProject(@AuthenticationPrincipal JwtUserDetails jwtUserDetails,
-                                           @Valid @RequestBody Project project) {
+                                           @RequestBody @Valid Project project) {
 
         Optional<Project> savedProject = projectService.createProject(project, jwtUserDetails.getUsername());
 

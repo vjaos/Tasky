@@ -29,15 +29,15 @@ public class IssueServiceImpl implements IssueService {
 
 
     @Override
-    public List<Issue> getIssuesByProjectId(Long projectId) {
+    public List<Issue> getIssuesByProjectId(Long projectId) throws EntityNotFoundException {
         Project project = projectService.findProjectById(projectId);
         return project.getIssues();
     }
 
     @Override
-    public Optional<Issue> getOne(Long issueId, Long projectId) {
+    public Optional<Issue> getOne(Long issueId, Long projectId) throws EntityNotFoundException {
         Project project = projectService.findProjectById(projectId);
-        return issueRepository.findByProjectAndId(project, issueId);
+        return issueRepository.findByIdAndProject(issueId, project);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class IssueServiceImpl implements IssueService {
         issueFromDb.setDescription(issueData.getDescription());
         issueFromDb.setIssueStatus(issueData.getIssueStatus());
 
-        return Optional.ofNullable(issueRepository.save(issueData));
+        return Optional.ofNullable(issueRepository.save(issueFromDb));
     }
 
     @Override

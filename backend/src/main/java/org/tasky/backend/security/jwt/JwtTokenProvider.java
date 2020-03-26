@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.tasky.backend.config.TaskyConstants;
 import org.tasky.backend.entity.Role;
 import org.tasky.backend.exception.JwtAuthenticationException;
 import org.tasky.backend.service.security.PostgresUserDetailService;
@@ -54,8 +55,8 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7, bearerToken.length());
+        if (bearerToken != null && bearerToken.startsWith(TaskyConstants.TOKEN_TYPE)) {
+            return bearerToken.substring(7);
         }
         return null;
     }
@@ -67,21 +68,10 @@ public class JwtTokenProvider {
             if (claims.getBody().getExpiration().before(new Date())) {
                 return false;
             }
-
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
-    }
-
-    private List<String> getRoleNames(List<Role> userRoles) {
-        List<String> result = new ArrayList<>();
-
-        userRoles.forEach(role -> {
-            result.add(role.getName());
-        });
-
-        return result;
     }
 
 
