@@ -4,10 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.tasky.backend.TestUtils;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.repository.ProjectRepository;
+import org.tasky.backend.repository.UserRepository;
 import org.tasky.backend.service.impl.ProjectServiceImpl;
 
 import javax.persistence.EntityNotFoundException;
@@ -26,56 +26,37 @@ class ProjectServiceTest {
     private ProjectRepository projectRepository;
 
     @Mock
-    private UserService userService;
+    private UserRepository userRepository;
 
     @BeforeEach
-    public void setup() {
+    public void init() {
         initMocks(this);
-        this.user = TestUtils.initUser();
-        this.project = TestUtils.initProject(user);
     }
 
-    private User user;
-    private Project project;
 
     @Test
     public void shouldCreateProject() {
-        doReturn(user)
-                .when(userService)
-                .findUserByUsername(user.getUsername());
+        when(userRepository.findByUsername(any())).thenReturn(Optional.of(new User()));
+        when(projectRepository.save(any(Project.class))).thenReturn(new Project());
 
-        projectService.createProject(project, user.getUsername());
+        projectService.createProject(new Project(), "Username");
 
-        verify(projectRepository, times(1)).save(project);
-    }
-
-
-    @Test
-    public void whenProjectAlreadyExists_thenThrowIllegalArgumentException() {
-
-        doReturn(Optional.of(new Project()))
-                .when(projectRepository)
-                .findProjectByName(project.getName());
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> projectService.createProject(project, user.getUsername())
-        );
+        verify(projectRepository, times(1)).save(any(Project.class));
     }
 
 
     @Test
     public void shouldUpdateProjectInformation() {
-        doReturn(Optional.of(project))
-                .when(projectRepository)
-                .findById(project.getId());
 
-        projectService.updateProject(project, project.getId());
+        when(projectRepository.findById(anyLong())).thenReturn(Optional.of(new Project()));
+        when(projectRepository.save(any(Project.class))).thenReturn(new Project());
+
+        projectService.updateProject(new Project(), 1L);
 
         verify(
                 projectRepository,
                 times(1)
-        ).save(project);
+        ).save(any(Project.class));
     }
 
     @Test

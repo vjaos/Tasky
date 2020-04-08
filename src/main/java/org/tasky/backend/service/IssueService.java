@@ -9,9 +9,9 @@ public interface IssueService {
 
     List<Issue> getIssuesByProjectId(Long projectId);
 
-    Optional<Issue> getOne(Long issueId, Long projectId);
+    Optional<Issue> getOne(Long issueId);
 
-    Optional<Issue> updateIssue(Long issueId, Issue issueData);
+    Issue updateIssue(Long issueId, Issue issueData);
 
-    Optional<Issue> createIssue(Issue issueData, Long projectId, String username);
+    Issue createIssue(Issue issueData, Long projectId, String username);
 }

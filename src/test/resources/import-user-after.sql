@@ -5,7 +5,7 @@ DELETE
 FROM projects;
 
 DELETE
-from roles;
+FROM roles;
 
 DELETE
 FROM users;

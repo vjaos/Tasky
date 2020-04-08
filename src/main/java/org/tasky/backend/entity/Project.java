@@ -3,7 +3,6 @@ package org.tasky.backend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -18,11 +17,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Project extends BaseEntity {
 
-    @NaturalId
     @NotNull
     @NotBlank
     @Column(name = "name")
-
     private String name;
     @NotNull
     @NotBlank

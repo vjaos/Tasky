@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.repository.UserRepository;
 import org.tasky.backend.security.jwt.JwtUserDetailsFactory;
+import org.tasky.backend.service.impl.UserServiceImpl;
 
 
 /**
@@ -33,7 +34,7 @@ public class PostgresUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User " + username + " not found"));
+                new UsernameNotFoundException(String.format(UserServiceImpl.USER_NOT_FOUND, username)));
 
         return JwtUserDetailsFactory.create(user);
     }

@@ -16,7 +16,6 @@ import org.tasky.backend.service.ProjectService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = TaskyConstants.PROJECTS_PATH)
@@ -39,26 +38,6 @@ public class ProjectController {
         return new ResponseEntity<>(issues, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{projectId}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getIssueByIdAndProjectId(@PathVariable("projectId") Long projectId,
-                                                      @PathVariable("issueId") Long issueId) {
-
-        return issueService.getOne(projectId, issueId)
-                .map(it -> new ResponseEntity<>(it, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @PutMapping(value = "/{projectId}/issues/{issueId}",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateIssue(@PathVariable("projectId") Long projectId,
-                                         @PathVariable("issueId") Long issueId,
-                                         @RequestBody @Valid Issue issueData) {
-
-        return issueService.updateIssue(issueId, issueData)
-                .map(it -> new ResponseEntity<>(it, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-    }
 
 
     @PostMapping(value = "/{projectId}/issues",
@@ -68,9 +47,8 @@ public class ProjectController {
                                          @RequestBody @Valid Issue issueData,
                                          @AuthenticationPrincipal JwtUserDetails userDetails) {
 
-        return issueService.createIssue(issueData, projectId, userDetails.getUsername())
-                .map(it -> new ResponseEntity<>(it, HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        Issue issue = issueService.createIssue(issueData, projectId, userDetails.getUsername());
+        return new ResponseEntity<>(issue, HttpStatus.CREATED);
     }
 
 
@@ -82,24 +60,20 @@ public class ProjectController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createProject(@PathVariable("id") Long projectId,
                                            @Valid @RequestBody Project projectData) {
-        Optional<Project> updatedProject = projectService.updateProject(projectData, projectId);
+        Project updatedProject = projectService.updateProject(projectData, projectId);
 
-        return updatedProject.
-                map(it -> new ResponseEntity<>(it, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        return new ResponseEntity<>(updatedProject, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/",
+    @PostMapping(value = "",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createProject(@AuthenticationPrincipal JwtUserDetails jwtUserDetails,
-                                           @RequestBody @Valid Project project) {
+                                           @RequestBody @Valid Project projectData) {
 
-        Optional<Project> savedProject = projectService.createProject(project, jwtUserDetails.getUsername());
+        Project project = projectService.createProject(projectData, jwtUserDetails.getUsername());
 
-        return savedProject
-                .map(it -> new ResponseEntity<>(it, HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        return new ResponseEntity<>(project, HttpStatus.CREATED);
     }
 
 

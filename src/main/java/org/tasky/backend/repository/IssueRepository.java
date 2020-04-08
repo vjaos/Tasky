@@ -12,8 +12,4 @@ import java.util.Optional;
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Long> {
 
-    List<Issue> findAllByProject(Project project);
-
-    Optional<Issue> findByIdAndProject(Long id, Project project);
-
 }

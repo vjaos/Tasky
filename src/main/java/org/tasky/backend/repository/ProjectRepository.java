@@ -10,9 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    Optional<Project> findProjectByOwnerAndId(User owner, Long id);
-
-    List<Project> findAllByOwner(User user);
-
     Optional<Project> findProjectByName(String name);
 }

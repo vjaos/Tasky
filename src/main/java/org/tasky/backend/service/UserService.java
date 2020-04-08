@@ -11,8 +11,6 @@ public interface UserService {
 
     void deleteUserById(Long id);
 
-    Optional<Project> getUserProjectById(String username, Long projectId);
-
     User findUserByUsername(String username);
 
 }

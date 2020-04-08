@@ -1,12 +1,9 @@
 package org.tasky.backend.service.impl;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.entity.enums.RoleType;
 import org.tasky.backend.repository.ProjectRepository;
@@ -18,9 +15,9 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
-@Slf4j
 public class UserServiceImpl implements UserService {
+
+    public static final String  USER_NOT_FOUND = "User %s not found";
 
     private UserRepository userRepository;
     private PasswordEncoder passEncoder;
@@ -58,19 +55,14 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public Optional<Project> getUserProjectById(String username, Long projectId) {
-        User user = findUserByUsername(username);
 
-        return projectRepository.findProjectByOwnerAndId(user, projectId);
-    }
 
 
     @Override
     public User findUserByUsername(String username) throws EntityNotFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(
-                        () -> new EntityNotFoundException(String.format("User with username %s not found", username))
+                        () -> new EntityNotFoundException(String.format(USER_NOT_FOUND, username))
                 );
     }
 

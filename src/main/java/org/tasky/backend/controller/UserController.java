@@ -38,7 +38,7 @@ public class UserController {
 
     @GetMapping(value = "/{username}/projects", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getUserProjects(@PathVariable("username") String username) {
-        List<Project> projects = projectService.getAllUserProject(username);
+        List<Project> projects = projectService.getAllUserProjects(username);
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 }

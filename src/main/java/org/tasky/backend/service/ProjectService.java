@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public interface ProjectService {
 
-    Optional<Project> createProject(Project project, String username);
+    Project createProject(Project project, String username);
 
-    Optional<Project> updateProject(Project project, Long projectId);
+    Project updateProject(Project project, Long projectId);
 
     Project findProjectById(Long id);
 
-    List<Project> getAllUserProject(String username);
+    List<Project> getAllUserProjects(String username);
 }

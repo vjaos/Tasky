@@ -1,20 +1,24 @@
 package org.tasky.backend.service;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.tasky.backend.TestUtils;
 import org.tasky.backend.entity.Issue;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.repository.IssueRepository;
+import org.tasky.backend.repository.ProjectRepository;
+import org.tasky.backend.repository.UserRepository;
 import org.tasky.backend.service.impl.IssueServiceImpl;
+
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@Ignore
 class IssueServiceTest {
 
     @InjectMocks
@@ -24,10 +28,10 @@ class IssueServiceTest {
     private IssueRepository issueRepository;
 
     @Mock
-    private ProjectService projectService;
+    private ProjectRepository projectRepository;
 
     @Mock
-    private UserService userService;
+    private UserRepository userRepository;
 
     private User user;
     private Project project;
@@ -36,27 +40,19 @@ class IssueServiceTest {
     @BeforeEach
     public void setup() {
         initMocks(this);
-        this.user = TestUtils.initUser();
-        this.project = TestUtils.initProject(user);
-        this.issue = TestUtils.initIssue(user, project);
     }
 
     @Test
     public void shouldCreateNewIssue() {
-        doReturn(project)
-                .when(projectService)
-                .findProjectById(project.getId());
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(new User()));
+        when(projectRepository.findById(anyLong())).thenReturn(Optional.of(new Project()));
+        when(issueRepository.save(any(Issue.class))).thenReturn(new Issue());
 
-        doReturn(new User())
-                .when(userService)
-                .findUserByUsername(user.getUsername());
-
-
-        issueServiceImpl.createIssue(issue, project.getId(), user.getUsername());
+        issueServiceImpl.createIssue(new Issue(), 1L, "Username");
 
         verify(
                 issueRepository,
                 times(1)
-        ).save(ArgumentMatchers.any(Issue.class));
+        ).save(any(Issue.class));
     }
 }

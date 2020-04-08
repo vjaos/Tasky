@@ -76,14 +76,6 @@ public class UserServiceTest {
         );
     }
 
-    @Test
-    public void shouldThrowNoEntityException_whenProjectNotFound() {
-        final long projectId = 1L;
 
-        assertThrows(
-                EntityNotFoundException.class,
-                () -> userService.getUserProjectById(user.getUsername(), projectId)
-        );
-    }
 
 }

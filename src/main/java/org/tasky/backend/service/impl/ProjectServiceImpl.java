@@ -2,29 +2,28 @@ package org.tasky.backend.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.repository.ProjectRepository;
+import org.tasky.backend.repository.UserRepository;
 import org.tasky.backend.service.ProjectService;
-import org.tasky.backend.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
 public class ProjectServiceImpl implements ProjectService {
 
+
     private ProjectRepository projectRepository;
-    private UserService userService;
+    private UserRepository userRepository;
+    public static final String PROJECT_NOT_FOUND = "Project with id '%d' not found";
 
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository,
-                              UserService userService) {
+                              UserRepository userRepository) {
         this.projectRepository = projectRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -37,41 +36,36 @@ public class ProjectServiceImpl implements ProjectService {
      * @throws IllegalArgumentException If with given name project already exists
      */
     @Override
-    public Optional<Project> createProject(Project projectData, String username)
-            throws EntityNotFoundException, IllegalArgumentException {
+    public Project createProject(Project projectData, String username) throws EntityNotFoundException {
 
-        Optional<Project> existing = projectRepository.findProjectByName(projectData.getName());
-
-        existing.ifPresent(it -> {
-            throw new IllegalArgumentException("Project already exists: " + it.getName());
-        });
-
-        final User user = userService.findUserByUsername(username);
-
-        Project projectInstance = new Project();
-        projectInstance.setName(projectData.getName());
-        projectInstance.setDescription(projectData.getDescription());
-        projectInstance.setOwner(user);
-
-        return Optional.ofNullable(projectRepository.save(projectInstance));
+        return userRepository.findByUsername(username)
+                .map(user -> {
+                    Project project = new Project();
+                    project.setName(projectData.getName());
+                    project.setDescription(projectData.getDescription());
+                    project.setOwner(user);
+                    return projectRepository.save(project);
+                }).orElseThrow(
+                        () -> new EntityNotFoundException(
+                                String.format(UserServiceImpl.USER_NOT_FOUND, username)));
     }
 
     /**
-     * Update project according to given data
+     * Update project according to given data or create it
      *
      * @param projectData for project that will be updated
      * @param projectId   of project to be updated
      * @return Optional<Project> updated project
-     * @throws EntityNotFoundException
      */
     @Override
-    public Optional<Project> updateProject(Project projectData, Long projectId) throws EntityNotFoundException {
-        Project projectFromDb = findProjectById(projectId);
-
-        projectFromDb.setName(projectData.getName());
-        projectFromDb.setDescription(projectData.getDescription());
-
-        return Optional.ofNullable(projectRepository.save(projectFromDb));
+    public Project updateProject(Project projectData, Long projectId) {
+        return projectRepository.findById(projectId)
+                .map(project -> {
+                    project.setName(projectData.getName());
+                    project.setDescription(projectData.getDescription());
+                    return projectRepository.save(project);
+                })
+                .orElseThrow(() -> new EntityNotFoundException(String.format(PROJECT_NOT_FOUND, projectId)));
     }
 
     /**
@@ -84,15 +78,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project findProjectById(Long id) throws EntityNotFoundException {
         return projectRepository.findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(String.format("Project with id %d not found", id))
-                );
+                .orElseThrow(() -> new EntityNotFoundException(String.format(PROJECT_NOT_FOUND, id)));
     }
 
     @Override
-    public List<Project> getAllUserProject(String username) {
-        User user = userService.findUserByUsername(username);
-        return projectRepository.findAllByOwner(user);
+    public List<Project> getAllUserProjects(String username) {
+        return userRepository.findByUsername(username)
+                .map(User::getProjects)
+                .orElseThrow(() -> new EntityNotFoundException(String.format(UserServiceImpl.USER_NOT_FOUND, username)));
     }
 
 }
