@@ -67,17 +67,6 @@ public class JwtUserDetails implements UserDetails {
         return true;
     }
 
-    public String getFirstname() {
-        return firstName;
-    }
-
-    public String getLastname() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 
     @JsonIgnore
     @Override
@@ -95,8 +84,4 @@ public class JwtUserDetails implements UserDetails {
         return enabled;
     }
 
-    @JsonIgnore
-    public Date getLastPasswordResetDate() {
-        return lastPasswordResetDate;
-    }
 }

@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.repository.UserRepository;
 import org.tasky.backend.security.jwt.JwtUserDetailsFactory;
@@ -18,6 +19,7 @@ import org.tasky.backend.service.impl.UserServiceImpl;
  * @author Vyacheslav Osipov
  */
 @Service
+@Transactional(readOnly = true)
 public class PostgresUserDetailService implements UserDetailsService {
 
     @Autowired

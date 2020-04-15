@@ -8,25 +8,25 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.tasky.backend.config.TaskyConstants;
-import org.tasky.backend.entity.Role;
 import org.tasky.backend.exception.JwtAuthenticationException;
 import org.tasky.backend.service.security.PostgresUserDetailService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class JwtTokenProvider {
     private final static int JWT_EXPIRATION_DAYS = 14;
-    @Value("${jwt.token.secret:Secret}")
+    @Value("${TASKY_JWT_SECRET:Secret}")
     private String secret;
 
-    @Autowired
     private PostgresUserDetailService userDetailsService;
 
+    @Autowired
+    public JwtTokenProvider(PostgresUserDetailService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     public String createToken(String username) {
 
@@ -49,6 +49,12 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
+    /**
+     * Extract username from give JWT-token
+     *
+     * @param token JWT-token
+     * @return
+     */
     public String getUsername(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }

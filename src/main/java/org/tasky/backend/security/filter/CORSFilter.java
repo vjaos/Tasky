@@ -13,7 +13,7 @@ import java.io.IOException;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CORSFilter implements Filter {
-    private FilterConfig config;
+
 
     public static final String ALLOW_ORIGIN = "Access-Control-Allow-Origin";
     public static final String ALLOW_METHODS = "Access-Control-Allow-Methods";
@@ -23,7 +23,6 @@ public class CORSFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.config = filterConfig;
     }
 
     @Override

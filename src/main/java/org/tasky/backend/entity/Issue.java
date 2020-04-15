@@ -24,6 +24,7 @@ public class Issue extends BaseEntity {
 
     @NotNull
     @NotBlank
+    @Lob
     @Column(name = "description")
     private String description;
 

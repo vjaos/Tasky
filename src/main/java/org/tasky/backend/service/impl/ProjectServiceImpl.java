@@ -2,6 +2,7 @@ package org.tasky.backend.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.repository.ProjectRepository;
@@ -36,6 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
      * @throws IllegalArgumentException If with given name project already exists
      */
     @Override
+    @Transactional
     public Project createProject(Project projectData, String username) throws EntityNotFoundException {
 
         return userRepository.findByUsername(username)
@@ -58,6 +60,7 @@ public class ProjectServiceImpl implements ProjectService {
      * @return Optional<Project> updated project
      */
     @Override
+    @Transactional
     public Project updateProject(Project projectData, Long projectId) {
         return projectRepository.findById(projectId)
                 .map(project -> {
@@ -65,27 +68,42 @@ public class ProjectServiceImpl implements ProjectService {
                     project.setDescription(projectData.getDescription());
                     return projectRepository.save(project);
                 })
-                .orElseThrow(() -> new EntityNotFoundException(String.format(PROJECT_NOT_FOUND, projectId)));
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                String.format(PROJECT_NOT_FOUND, projectId)));
     }
 
     /**
-     * Looking for a project according to given Id
+     * Searches for a project according to given Id
      *
      * @param id of project to be found
      * @return found project
      * @throws EntityNotFoundException if there isn't such project
      */
     @Override
+    @Transactional(readOnly = true)
     public Project findProjectById(Long id) throws EntityNotFoundException {
         return projectRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(PROJECT_NOT_FOUND, id)));
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                String.format(PROJECT_NOT_FOUND, id)));
     }
 
+    /**
+     * Searches for projects of a given user
+     *
+     * @param username of user whose projects you want to get
+     * @return List of projects created by given user
+     * @throws EntityNotFoundException if user with give username doesn't exists
+     */
     @Override
-    public List<Project> getAllUserProjects(String username) {
+    @Transactional(readOnly = true)
+    public List<Project> getAllUserProjects(String username) throws EntityNotFoundException {
         return userRepository.findByUsername(username)
                 .map(User::getProjects)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(UserServiceImpl.USER_NOT_FOUND, username)));
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                String.format(UserServiceImpl.USER_NOT_FOUND, username)));
     }
 
 }

@@ -1,11 +1,11 @@
 package org.tasky.backend.service;
 
-import org.tasky.backend.entity.Project;
+import org.tasky.backend.dto.request.LoginRequest;
 import org.tasky.backend.entity.User;
 
-import java.util.Optional;
-
 public interface UserService {
+
+    String authenticate(LoginRequest loginRequest);
 
     void saveUser(User user);
 
