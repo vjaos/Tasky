@@ -3,4 +3,4 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/vjaos/tasky-backend/badge)](https://www.codefactor.io/repository/github/vjaos/tasky-backend)
 [![codecov.io](https://codecov.io/github/vjaos/Tasky-backend/coverage.svg?branch=master)](https://codecov.io/github/vjaos/Tasky-backend?branch=master)
 # Tasky
-> Simple task manager
+> Simple project tracker
