@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tasky.backend.entity.Issue;
 import org.tasky.backend.entity.Project;
+import org.tasky.backend.entity.enums.IssueStatus;
 import org.tasky.backend.repository.IssueRepository;
 import org.tasky.backend.repository.ProjectRepository;
 import org.tasky.backend.repository.UserRepository;
@@ -74,6 +75,7 @@ public class IssueServiceImpl implements IssueService {
                         .map(project -> {
                             issueData.setAuthor(user);
                             issueData.setProject(project);
+                            issueData.setIssueStatus(IssueStatus.WAITING);
                             return issueRepository.save(issueData);
                         })
                         .orElseThrow(() ->

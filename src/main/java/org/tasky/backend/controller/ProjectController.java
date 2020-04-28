@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.tasky.backend.config.TaskyConstants;
+import org.tasky.backend.common.TaskyConstants;
 import org.tasky.backend.entity.Issue;
 import org.tasky.backend.entity.Project;
 import org.tasky.backend.security.jwt.JwtUserDetails;
@@ -37,7 +37,6 @@ public class ProjectController {
         List<Issue> issues = issueService.getIssuesByProjectId(projectId);
         return new ResponseEntity<>(issues, HttpStatus.OK);
     }
-
 
 
     @PostMapping(value = "/{projectId}/issues",
@@ -77,4 +76,12 @@ public class ProjectController {
     }
 
 
+    @PutMapping(value = "/issues/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateIssue(@RequestBody @Valid Issue issueData,
+                                         @PathVariable("id") Long issueId) {
+        Issue updatedIssue = issueService.updateIssue(issueId, issueData);
+        return new ResponseEntity<>(updatedIssue, HttpStatus.OK);
+    }
 }

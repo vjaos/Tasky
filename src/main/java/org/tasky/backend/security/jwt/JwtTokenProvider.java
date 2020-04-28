@@ -7,7 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.tasky.backend.config.TaskyConstants;
+import org.tasky.backend.common.TaskyConstants;
 import org.tasky.backend.exception.JwtAuthenticationException;
 import org.tasky.backend.service.security.PostgresUserDetailService;
 

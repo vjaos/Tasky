@@ -1,4 +1,4 @@
-package org.tasky.backend.config;
+package org.tasky.backend.common;
 
 public interface TaskyConstants {
     String API_URL = "/api/";

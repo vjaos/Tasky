@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.tasky.backend.config.TaskyConstants;
+import org.tasky.backend.common.TaskyConstants;
 import org.tasky.backend.dto.request.LoginRequest;
 import org.tasky.backend.entity.User;
 import org.tasky.backend.entity.enums.Status;

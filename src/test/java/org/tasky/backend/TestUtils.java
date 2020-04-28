@@ -5,7 +5,7 @@ import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.tasky.backend.config.TaskyConstants;
+import org.tasky.backend.common.TaskyConstants;
 import org.tasky.backend.dto.request.LoginRequest;
 import org.tasky.backend.entity.Issue;
 import org.tasky.backend.entity.Project;

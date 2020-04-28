@@ -5,11 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.tasky.backend.config.TaskyConstants;
+import org.tasky.backend.common.TaskyConstants;
 import org.tasky.backend.dto.request.LoginRequest;
 import org.tasky.backend.dto.response.JwtResponse;
 import org.tasky.backend.entity.User;
-import org.tasky.backend.security.jwt.JwtTokenProvider;
 import org.tasky.backend.service.UserService;
 
 import javax.validation.Valid;
@@ -24,7 +23,6 @@ public class AuthController {
     @Autowired
     public AuthController(UserService userService ){
         this.userService = userService;
-
     }
 
     @PostMapping("/login")
